@@ -9,13 +9,13 @@ import { Button } from '@/components/button'
 import { useState } from 'react'
 
 export default function Register() {
-    const [ name, setName ] = useState('')
-    const [ email, setEmail ] = useState('')
+    const [ name, setName ] = useState("")
+    const [ email, setEmail ] = useState("")
 
     function handleRegister() {
-        if (!name.trim() || !email.trim()) {
-            return Alert.alert('Inscrição', 'Preencha todos os campos!')
-        }
+        // if (!name.trim() || !email.trim()) {
+        //     return Alert.alert('Inscrição', 'Preencha todos os campos!')
+        // } 
 
         router.push('/ticket')
     }
