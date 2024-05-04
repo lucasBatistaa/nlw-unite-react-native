@@ -1,15 +1,20 @@
-import { ActivityIndicator, Text, Pressable, PressableProps } from "react-native";
+import { cssInterop } from "nativewind";
+import { ActivityIndicator, Text, Pressable, TouchableOpacityProps, TouchableOpacity } from "react-native";
 
-type Props =  PressableProps & {
+type Props =  TouchableOpacityProps & {
     title: string,
     isLoading?: boolean
 }
 
+cssInterop(TouchableOpacity, { className: { target: "style" } });
+
+
 export function Button({ title, isLoading, ...rest }: Props) { 
     return (
-        <Pressable 
+        <TouchableOpacity 
+            activeOpacity={0.7}
             disabled={isLoading}
-            className="active:opacity-70 w-full h-14 bg-orange-500 items-center justify-center rounded-lg"
+            className="w-full h-14 bg-orange-500 items-center justify-center rounded-lg"
             {...rest}
         >
             {
@@ -19,6 +24,6 @@ export function Button({ title, isLoading, ...rest }: Props) {
                     <Text className="text-green-500 text-base font-bold uppercase">{title}</Text>
                 )
             }
-        </Pressable>
+        </TouchableOpacity>
     )
 }

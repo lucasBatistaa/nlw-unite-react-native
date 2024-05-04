@@ -4,24 +4,45 @@ import {
     StatusBar, 
     ScrollView, 
     Text, 
-    Pressable, 
     Alert,
-    Modal
+    Share,
+    Modal,
+    TouchableOpacity
 } from "react-native"
 
 import * as ImagePicker from 'expo-image-picker'
 
+import { useBadgeStore } from "@/store/badge-store"
+import { Redirect } from "expo-router"
+
 import Header from "@/components/header"
 import Credential from "@/components/credential"
 import { Button } from "@/components/button"
+
+import { MotiView } from "moti"
 
 import { colors } from "@/styles/colors"
 import { FontAwesome } from "@expo/vector-icons"
 import QRCode from "@/components/qrcode"
 
 export default function Ticket() {
-    const [ image, setImage ] = useState('')
     const [ expandQRCode, setExpandQRCode ] = useState(false)
+
+    const badgeStore = useBadgeStore()
+
+    async function handleShare() {
+        try {
+            if (badgeStore.data?.checkInURL) {
+                await Share.share({
+                    message: badgeStore.data.checkInURL
+                })
+            }
+        } catch (error) {
+            console.error(error)
+
+            Alert.alert('Compartilhar', 'Não foi possível compartilhar!')
+        }
+    }
 
     async function handleSelectImage() {
         try {
@@ -32,12 +53,16 @@ export default function Ticket() {
             })
 
             if (result.assets) {
-                setImage(result.assets[0].uri)
+                badgeStore.updateAvatar(result.assets[0].uri)
             }
         } catch (error) {
             console.log(error)
             Alert.alert('Foto', 'Não foi possível selecionar a imagem.')
         }
+    }
+
+    if (!badgeStore.data?.checkInURL) {
+        return <Redirect href={'/'}/>
     }
 
     return (
@@ -52,31 +77,52 @@ export default function Ticket() {
                 showsVerticalScrollIndicator={false}
             >
                 <Credential 
-                    image={image} 
+                    data={badgeStore.data}
                     onChangeAvatar={handleSelectImage}
                     onExpandQRCode={() => setExpandQRCode(true)}
                 />
 
-                <FontAwesome 
-                    name="angle-double-down" 
-                    size={24} 
-                    color={colors.gray[300]}
-                    className="self-center my-6"
-                />
+                <MotiView
+                    from={{
+                        translateY: 0
+                    }}
+                    animate={{
+                        translateY: 10
+                    }}
+                    transition={{
+                        loop: true,
+                        type: 'timing',
+                        duration: 700
+                    }}
+                >
+                    <FontAwesome
+                        name="angle-double-down"
+                        size={24}
+                        color={colors.gray[300]}
+                        className="self-center my-6"
+                    />
+                </MotiView>
 
                 <Text className="text-white font-bold text-2xl mt-4">
                     Compartilhar credencial
                 </Text>
 
                 <Text className="text-white font-regular text-base mt-1 mb-6">
-                    Mostre ao mundo que você vai participar do Unite Summit!
+                    Mostre ao mundo que você vai participar do {badgeStore.data.eventTitle}!
                 </Text>
 
-                <Button title="Compartilhar"/>
+                <Button 
+                    title="Compartilhar"
+                    onPress={handleShare}
+                />
 
-                <Pressable className="active:opacity-70 mt-10">
+                <TouchableOpacity 
+                    className="mt-10"
+                    activeOpacity={0.7}
+                    onPress={() => badgeStore.remove()}
+                >
                     <Text className="text-base text-white font-bold text-center">Remover Ingresso</Text>
-                </Pressable>
+                </TouchableOpacity>
             </ScrollView>
 
             <Modal
@@ -84,15 +130,15 @@ export default function Ticket() {
                 statusBarTranslucent
             >
                 <View className="flex-1 bg-green-500 items-center justify-center">
-                    <Pressable
-                        className="active:opacity-90"
+                    <TouchableOpacity
+                        activeOpacity={0.7}
                         onPress={() => setExpandQRCode(false)}
                     >
                         <QRCode value="teste" size={300} />
                         <Text className="font-body text-orange-500 text-sm mt-10 text-center">
                             Fechar QRCode
                         </Text>
-                    </Pressable>
+                    </TouchableOpacity>
                 </View>
             </Modal>
         </View>
