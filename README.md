@@ -8,7 +8,7 @@ Projeto desenvolvido durante o NLW Unite, da Rocketseat. Aplicação Mobile para
 ## Aprendizados 
 Aplicação desenvolvida em React Native utilizando Typescript e a ferramenta Expo.
 
-Principais aprendizados em relação ao uso do NativeWind para estilização, componentização de partes reutilizáveis do código, conexão com API e animações.
+Principais aprendizados em relação ao uso do NativeWind para estilização, componentização de partes reutilizáveis do código, conexão com API, tipagem com Typescript e animações.
 
 ## Telas
 ### Home (/)
@@ -28,8 +28,9 @@ cadastrado no back-end. Caso o usuário já possua ingresso, é redirecionado pa
 
 ## Bibliotecas
 - **Axios**, realizar as chamadas de requisições para a API
+- NativeWind, 
 - **Moti**, animação de componentes de forma declarativa
 - **Zustand**, gerenciamento de estados
 - **async-storage**, persistência dos dados ao recarregar ou abrir novamente o aplicativo
-- image-picker, acessa a UI do sistema para selecionar uma imagem do dispositivo
-- qrcode-svg, geração de QRCode
+- **image-picker**, acessa a UI do sistema para selecionar uma imagem do dispositivo
+- **qrcode-svg**, geração de QRCode
